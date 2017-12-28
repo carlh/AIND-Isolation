@@ -30,5 +30,33 @@ class IsolationTest(unittest.TestCase):
         print("Move history:\n{!s}".format(history))
 
 
+class AlphaBetaTest(unittest.TestCase):
+    ud_submit_board_state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 60]
+    ud_submit_board_state_2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 42]
+
+    def setUp(self):
+        reload(game_agent)
+        self.player1 = game_agent.AlphaBetaPlayer(name="Player 1", search_depth=1)
+        self.player2 = game_agent.AlphaBetaPlayer(name="Player 2", search_depth=1)
+        self.game = isolation.Board(self.player1, self.player2, width=9, height=9)
+
+    def test_alpha_beta_agend(self):
+        self.game.set_board_state(self.ud_submit_board_state)
+        print(self.game.to_string())
+        winner, history, outcome = self.game.play(time_limit=float("inf"))
+        print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
+        print(self.game.to_string())
+        print("Move history:\n{!s}".format(history))
+
+    def test_alpha_beta_expect_43(self):
+        self.game.set_board_state(self.ud_submit_board_state_2)
+        print(self.game.to_string())
+        winner, history, outcome = self.game.play(time_limit=float("inf"))
+        print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
+        print(self.game.to_string())
+        print("Move history:\n{!s}".format(history))
+        self.assertTrue(history[0] == (4, 3), "Expected the best first move to be {0}.  Found: {1}".format((4, 3), history[0]))
+
+
 if __name__ == '__main__':
     unittest.main()
