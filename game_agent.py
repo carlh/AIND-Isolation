@@ -384,7 +384,7 @@ class AlphaBetaPlayer(IsolationPlayer):
         if len(possible_moves) == 0:
             return -1, -1
 
-        _, move = max([(self.max_value(game, depth, alpha, beta), m) for m in possible_moves])
+        _, move = self.max_value(game, depth, alpha, beta)
         return move
 
     def terminal_test(self, game, depth):
@@ -398,55 +398,62 @@ class AlphaBetaPlayer(IsolationPlayer):
             raise SearchTimeout()
         return not (bool(game.get_legal_moves()) and depth > 0)
 
-    def max_value(self, game, depth, alpha, beta):
+    def max_value(self, game, depth, alpha, beta, current_best=(-1,-1)):
         """
 
         :param game:
         :param depth:
         :param alpha:
         :param beta:
+        :param current_best:
         :return:
         """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
         if self.terminal_test(game=game, depth=depth):
-            return self.score(game, self)
+            return self.score(game, self), current_best
 
         legal_moves = game.get_legal_moves()
 
-        # v = max([self.min_value(game.forecast_move(m), depth - 1, alpha, beta) for m in legal_moves])
         v = float("-inf")
         for move in legal_moves:
-            v = max(v, self.min_value(game.forecast_move(move), depth-1, alpha, beta))
+            old_v = v
+            v = max(v, self.min_value(game.forecast_move(move), depth-1, alpha, beta, current_best)[0])
+            if v != old_v:
+                current_best = move
             if v >= beta:
-                return v
+                return v, current_best
             alpha = max(alpha, v)
-        return v
+        return v, current_best
 
-    def min_value(self, game, depth, alpha, beta):
+    def min_value(self, game, depth, alpha, beta, current_best=(-1, -1)):
         """
 
         :param game:
         :param depth:
         :param alpha:
         :param beta:
+        :param current_best:
         :return:
         """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
         if self.terminal_test(game=game, depth=depth):
-            return self.score(game, self)
+            return self.score(game, self), current_best
 
         legal_moves = game.get_legal_moves()
 
         v = float("inf")
         for move in legal_moves:
-            v = min(v, self.max_value(game.forecast_move(move), depth-1, alpha, beta))
+            old_v = v
+            v = min(v, self.max_value(game.forecast_move(move), depth-1, alpha, beta, current_best)[0])
+            if v != old_v:
+                current_best = move
             if v <= alpha:
-                return v
+                return v, current_best
             beta = min(beta, v)
 
-        return v
+        return v, current_best
 

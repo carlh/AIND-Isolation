@@ -48,15 +48,6 @@ class AlphaBetaTest(unittest.TestCase):
         print(self.game.to_string())
         print("Move history:\n{!s}".format(history))
 
-    def test_alpha_beta_expect_43(self):
-        self.game.set_board_state(self.ud_submit_board_state_2)
-        print(self.game.to_string())
-        winner, history, outcome = self.game.play(time_limit=float("inf"))
-        print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
-        print(self.game.to_string())
-        print("Move history:\n{!s}".format(history))
-        self.assertTrue(history[0] == (4, 3), "Expected the best first move to be {0}.  Found: {1}".format((4, 3), history[0]))
-
 
 if __name__ == '__main__':
     unittest.main()
