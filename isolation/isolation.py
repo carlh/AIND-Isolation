@@ -55,6 +55,15 @@ class Board(object):
     def hash(self):
         return str(self._board_state).__hash__()
 
+    def set_board_state(self, board_state):
+        """
+
+        :param board_state: Array int
+            The state of the board, must be compatible with the size.  No checking is done.
+        :return: void
+        """
+        self._board_state = board_state
+
     @property
     def active_player(self):
         """The object registered as the player holding initiative in the

@@ -13,17 +13,21 @@ from importlib import reload
 
 class IsolationTest(unittest.TestCase):
     """Unit tests for isolation agents"""
+    ud_submit_board_state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 56]
 
     def setUp(self):
         reload(game_agent)
-        self.player1 = "Player1"
-        self.player2 = "Player2"
-        self.game = isolation.Board(self.player1, self.player2)
+        self.player1 = game_agent.MinimaxPlayer(name="Player 1", search_depth=1)
+        self.player2 = game_agent.MinimaxPlayer(name="Player 2", search_depth=1)
+        self.game = isolation.Board(self.player1, self.player2, width=9, height=9)
+        self.game.set_board_state(self.ud_submit_board_state)
 
-    def test_example(self):
-        # TODO: All methods must start with "test_"
-        self.fail("Hello, World!")
-
+    def test_minimax_agent(self):
+        print(self.game.to_string())
+        winner, history, outcome = self.game.play(time_limit=float("inf"))
+        print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
+        print(self.game.to_string())
+        print("Move history:\n{!s}".format(history))
 
 
 if __name__ == '__main__':

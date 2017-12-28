@@ -136,6 +136,9 @@ def center_score(game, player):
 class RandomPlayer():
     """Player that chooses a move randomly."""
 
+    # The game board calls this function, once each round for each player
+    # This is the function that runs the algorithm to determine the best move
+    # I'm surprised that there's no call to score, but that's what I need to figure out.
     def get_move(self, game, time_left):
         """Randomly select a move from the available legal moves.
 
@@ -150,15 +153,20 @@ class RandomPlayer():
             current turn. Returning with any less than 0 ms remaining forfeits
             the game.
 
+
         Returns
         ----------
         (int, int)
             A randomly selected legal move; may return (-1, -1) if there are
             no available legal moves.
         """
+        # This should be consistent with all of the move algorithms, if there's no moves you just return -1, -1
         legal_moves = game.get_legal_moves()
         if not legal_moves:
             return (-1, -1)
+
+        # This is pure randomness.  Just index into a random location in legal_moves and return the move.
+        # The point of the exercise is
         return legal_moves[randint(0, len(legal_moves) - 1)]
 
 
@@ -195,6 +203,10 @@ class GreedyPlayer():
         legal_moves = game.get_legal_moves()
         if not legal_moves:
             return (-1, -1)
+        # In my code, this is going to return the move predicted by the minimax algorithm that is limited
+        # by the Depth parameter
+        # Freakin Python...sometimes it's magic. This is returning a tuple of the max value (which it discards with _,
+        # and the actual move associated with the maximum score.  But how does max work with tuples?
         _, move = max([(self.score(game.forecast_move(m), self), m) for m in legal_moves])
         return move
 
@@ -256,6 +268,9 @@ if __name__ == "__main__":
     from isolation import Board
 
     # create an isolation board (by default 7x7)
+    # Note that each player can follow a different algorithm, so one can be minimax and one can be Random.
+    # That's a good baseline.  Test each alg against the RandomPlayer.  If they're not better than random then it's just
+    # not worth using.
     player1 = RandomPlayer()
     player2 = GreedyPlayer()
     game = Board(player1, player2)
