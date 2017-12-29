@@ -24,7 +24,7 @@ class IsolationTest(unittest.TestCase):
 
     def test_minimax_agent(self):
         print(self.game.to_string())
-        winner, history, outcome = self.game.play(time_limit=float("inf"))
+        winner, history, outcome = self.game.play(time_limit=10000)
         print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
         print(self.game.to_string())
         print("Move history:\n{!s}".format(history))
@@ -43,7 +43,7 @@ class AlphaBetaTest(unittest.TestCase):
     def test_alpha_beta_agend(self):
         self.game.set_board_state(self.ud_submit_board_state)
         print(self.game.to_string())
-        winner, history, outcome = self.game.play(time_limit=float("inf"))
+        winner, history, outcome = self.game.play(time_limit=20000)
         print("\nWinner: {}\nOutcome: {}".format(winner, outcome))
         print(self.game.to_string())
         print("Move history:\n{!s}".format(history))
